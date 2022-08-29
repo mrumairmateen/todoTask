@@ -1,0 +1,113 @@
+<nz-layout class="layout">
+  <nz-header>
+  </nz-header>
+  <nz-content class="pt-4">
+    <div class="inner-content pt-4">
+      <div class="container-fluid">
+        <h3 class="d-flex justify-content-center mb-4"> Todo Application </h3>
+        <div class="row">
+          <div class="col-md-12 pt-4 justify-content-center">
+            <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm">
+              <nz-form-item>
+                <nz-form-control>
+                  <input formControlName="searchField" nz-input placeholder="Search by Task Name" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <button nz-button nzType="primary" (click)="onSubmitSearch()">Search By Name</button>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <button *ngIf="resetButton" class="ml-4" (click)="onRest()" nz-button nzType="primary">Reset</button>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <button class="ml-4" nz-button nzType="primary" (click)="addTask()">Add New Task</button>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
+          </div>
+        </div>
+        <div *ngIf="addNewTask" class="row">
+          <div class="col-md-12 mt-2 d-flex">
+            <form nz-form [nzLayout]="'inline'" [formGroup]="todoForm" (ngSubmit)="submitForm()">
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your Task Name!">
+                  <input formControlName="taskName" nz-input placeholder="Task Name" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your Task Description!">
+                  <input formControlName="taskDescription" nz-input placeholder="Task Description" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your Task Start Date!">
+                  <nz-date-picker nzShowTime formControlName="taskStartDate"></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your Task End Date!">
+                  <nz-date-picker nzShowTime formControlName="taskEndDate"></nz-date-picker>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your Task Assignee!">
+                  <input formControlName="taskAssignee" nz-input placeholder="Task Assignee" />
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <button nz-button nzType="primary">{{isEdit ? 'Update' : 'Add'}}</button>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                <nz-form-control>
+                  <button class="ml-2" (click)="addNewTask = false" nz-button nzType="default">Cancel</button>
+                </nz-form-control>
+              </nz-form-item>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row pt-4">
+        <nz-table #basicTable [nzData]="taskData">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Task Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Assignee</th>
+              <th>Task Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of taskData">
+              <td>{{data.id}}</td>
+              <td>{{data.taskName}}</td>
+              <td>{{data?.taskStartDate | date:'medium'}}</td>
+              <td>{{data?.taskEndDate | date:'medium'}}</td>
+              <td>{{data.taskAssignee}}</td>
+              <td>{{data.taskDescription}}</td>
+              <td>
+                <a (click)="onEdit(data)" style="color: green">Edit</a>
+                <nz-divider nzType="vertical"></nz-divider>
+
+                <a style="color: red" nz-popconfirm nzPopconfirmTitle="Are you sure delete this task?"
+                  nzPopconfirmPlacement="bottom" (nzOnConfirm)="onDelete(data)">
+                  Delete
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+
+    </div>
+  </nz-content>
+</nz-layout>
