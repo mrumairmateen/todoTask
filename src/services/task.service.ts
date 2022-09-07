@@ -36,7 +36,8 @@ export class TaskService {
   }
 
   getTaskByID(id: number) {
-    return this.taskData.filter((task: Task) => task.id === id)
+    const taskData = JSON.parse(localStorage.getItem('taskData') || '')
+    return taskData.filter((task: Task) => task.id === id)
   }
 
   convertDateToString(date: string) {

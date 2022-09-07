@@ -36,8 +36,11 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.taskData = JSON.parse(localStorage.getItem('taskData') || '')
     this.initialFilters = JSON.parse(localStorage.getItem('initialFilters') || '{}')
-    this.getTasks(this.initialFilters)
+    if (this.initialFilters) {
+      this.getTasks(this.initialFilters)
+    }
   }
 
   submitForm(): void {
@@ -52,6 +55,8 @@ export class TasksComponent implements OnInit {
         formData.id = this.taskData.length === 0 ? 1 : this.taskData.length + 1
         this.taskData.push(formData)
       }
+        const stringifyData = JSON.stringify(this.taskData)
+        localStorage.setItem('taskData', stringifyData)
       this.addNewTask = false
       this.todoForm.reset()
       this.message.success('Request Successful')
@@ -93,7 +98,6 @@ export class TasksComponent implements OnInit {
   getTasks(data: Task | undefined) {
     const taskFilters = JSON.stringify(data)
     localStorage.setItem('initialFilters', taskFilters)
-    this.taskData = this.taskService.getData()
     if (data?.taskName || data?.taskDescription || data?.taskAssignee || data?.taskStartDate || data?.taskEndDate) {
       this.taskData = this.taskData.filter((task: Task) => {
         return task.taskName.toLowerCase().includes(data.taskName.toLowerCase()) &&
@@ -102,6 +106,8 @@ export class TasksComponent implements OnInit {
         task.taskStartDate ? task.taskStartDate.includes(data.taskStartDate) : '' &&
         task.taskEndDate ? task.taskEndDate.includes(data.taskEndDate) : ''
       })
+    } else {
+    this.taskData = JSON.parse(localStorage.getItem('taskData') || '')
     }
   }
 }
