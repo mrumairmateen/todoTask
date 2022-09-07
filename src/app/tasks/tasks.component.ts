@@ -36,10 +36,8 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.initialFilters) {
-      this.initialFilters = JSON.parse(localStorage.getItem('initialFilters') || '')
-    }
-    this.getTasks(this.initialFilters || undefined)
+    this.initialFilters = JSON.parse(localStorage.getItem('initialFilters') || '{}')
+    this.getTasks(this.initialFilters)
   }
 
   submitForm(): void {
