@@ -27,10 +27,25 @@ export class TaskSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchForm.patchValue(this.formData || {})
+    this.searchFormValue()
+  }
+
+  searchFormValue() {
+      Object.values(this.searchForm.controls).forEach(control => {
+        if (control.value) {
+          this.resetButton = true
+        }
+      });
   }
 
   onAddTask() {
     this.addTask.emit('add')
+  }
+
+  onResetButton() {
+    this.resetButton = false
+    this.taskFilterData.emit()
+    this.searchForm.reset()
   }
 
   onSubmitSearch() {

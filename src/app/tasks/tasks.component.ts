@@ -55,8 +55,8 @@ export class TasksComponent implements OnInit {
         formData.id = this.taskData.length === 0 ? 1 : this.taskData.length + 1
         this.taskData.push(formData)
       }
-        const stringifyData = JSON.stringify(this.taskData)
-        localStorage.setItem('taskData', stringifyData)
+      const stringifyData = JSON.stringify(this.taskData)
+      localStorage.setItem('taskData', stringifyData)
       this.addNewTask = false
       this.todoForm.reset()
       this.message.success('Request Successful')
@@ -90,6 +90,9 @@ export class TasksComponent implements OnInit {
     const taskUpdateIndex = this.taskData.findIndex((u: { id: number }) => u.id === editedTask.id)
     this.taskData.splice(taskUpdateIndex, 1)
     this.message.success('Deleted Successful')
+    const stringifyData = JSON.stringify(this.taskData)
+    localStorage.setItem('taskData', stringifyData)
+
     if (this.todoForm.value) {
       this.todoForm.reset()
     }
@@ -100,11 +103,11 @@ export class TasksComponent implements OnInit {
     localStorage.setItem('initialFilters', taskFilters)
     if (data?.taskName || data?.taskDescription || data?.taskAssignee || data?.taskStartDate || data?.taskEndDate) {
       this.taskData = this.taskData.filter((task: Task) => {
-        return task.taskName.toLowerCase().includes(data.taskName.toLowerCase()) &&
-        task.taskAssignee.toLowerCase().includes(data.taskAssignee.toLowerCase()) &&
-        task.taskDescription.toLowerCase().includes(data.taskDescription.toLowerCase()) &&
-        task.taskStartDate ? task.taskStartDate.includes(data.taskStartDate) : '' &&
-        task.taskEndDate ? task.taskEndDate.includes(data.taskEndDate) : ''
+        return task.taskName.toLowerCase().includes(data?.taskName.toLowerCase()) &&
+        task.taskAssignee.toLowerCase().includes(data?.taskAssignee.toLowerCase()) &&
+        task.taskDescription.toLowerCase().includes(data?.taskDescription.toLowerCase()) &&
+        task.taskStartDate ? task.taskStartDate.includes(data?.taskStartDate) : '' &&
+        task.taskEndDate ? task.taskEndDate.includes(data?.taskEndDate) : ''
       })
     } else {
     this.taskData = JSON.parse(localStorage.getItem('taskData') || '')
