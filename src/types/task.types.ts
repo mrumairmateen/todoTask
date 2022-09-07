@@ -2,7 +2,7 @@ export interface Task {
   id: number;
   taskName: string;
   taskDescription: string;
-  taskStartDate: any;
-  taskEndDate: any;
+  taskStartDate: string;
+  taskEndDate: string;
   taskAssignee: string;
 }

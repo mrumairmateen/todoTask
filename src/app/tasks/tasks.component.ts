@@ -1,33 +1,30 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {TaskService} from "../../services/task.service";
 import {en_US, NzI18nService} from 'ng-zorro-antd/i18n';
-import {Task} from "../../types/task.types";
 import {NzMessageService} from 'ng-zorro-antd/message';
+import {TaskService} from 'src/services/task.service';
+import {Task} from 'src/types/task.types';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit, OnDestroy {
-  searchForm!: UntypedFormGroup
+export class TasksComponent implements OnInit {
+  applicationName: string = 'Todo Application'
   todoForm!: UntypedFormGroup
   loading = false
   taskData: Task[] | any | undefined
   isEdit: boolean = false
   addNewTask: boolean = false
-  resetButton: boolean = false
+  initialFilters: Task | undefined
 
-  constructor(private message: NzMessageService, private fb: UntypedFormBuilder, private taskService: TaskService, private i18n: NzI18nService) {
+  constructor(
+    private message: NzMessageService,
+    private fb: UntypedFormBuilder,
+    private taskService: TaskService,
+    private i18n: NzI18nService) {
     this.i18n.setLocale(en_US)
-  }
-
-  ngOnInit(): void {
-    // Todo Data from service
-    this.taskData = this.taskService.getData()
-
-    // Todo Form
     this.todoForm = this.fb.group({
       id: [],
       taskName: [null, [Validators.required]],
@@ -36,42 +33,27 @@ export class TasksComponent implements OnInit, OnDestroy {
       taskEndDate: [null, [Validators.required]],
       taskAssignee: [null, [Validators.required]],
     })
-
-    this.searchForm = this.fb.group({
-      searchField: [null]
-    })
   }
 
-  ngOnDestroy(): void {
-    localStorage.clear()
+  ngOnInit(): void {
+    this.initialFilters = JSON.parse(localStorage.getItem('initialFilters') || '')
+    this.getTasks(this.initialFilters)
   }
 
-  // Submit Form Data
   submitForm(): void {
     if (this.todoForm.valid) {
+      const formData: Task = this.todoForm.value
+      formData.taskStartDate = this.taskService.convertDateToString(formData.taskStartDate)
+      formData.taskEndDate = this.taskService.convertDateToString(formData.taskEndDate)
       if (this.isEdit) {
-        // Data for update
-        let editedTask: Task = this.taskData.find((task: Task) => {
-          return this.todoForm.controls['id'].value === task.id
-        })
-        const taskUpdateIndex = this.taskData.findIndex((u: { id: number }) => u.id === editedTask.id)
-        let item = this.taskData[taskUpdateIndex]
-        item.taskName = this.todoForm.controls['taskName'].value
-        item.taskDescription = this.todoForm.controls['taskDescription'].value
-        item.taskStartDate = this.todoForm.controls['taskStartDate'].value
-        item.taskEndDate = this.todoForm.controls['taskEndDate'].value
-        item.taskAssignee = this.todoForm.controls['taskAssignee'].value
+        this.taskData = this.taskData.map((task: Task) => task.id !== formData.id ? task : formData)
         this.isEdit = false
       } else {
-        // New Data to add
-        const data: Task = this.todoForm.value
-        data.id = this.taskData.length === 0 ? 1 : this.taskData.length + 1
-        this.taskData.push(data)
+        formData.id = this.taskData.length === 0 ? 1 : this.taskData.length + 1
+        this.taskData.push(formData)
       }
       this.addNewTask = false
       this.todoForm.reset()
-
-      // Toast for the information
       this.message.success('Request Successful')
     } else {
       Object.values(this.todoForm.controls).forEach(control => {
@@ -84,54 +66,43 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
   }
 
-  // On Edit Data
+  addTask(type: string) {
+    this.todoForm.reset()
+    this.isEdit = false
+    this.addNewTask = true
+  }
+
   onEdit(task: Task) {
     this.addNewTask = true
     this.todoForm.patchValue(task)
     this.isEdit = true
   }
 
-  // delete data
   onDelete(task: Task) {
-    // Task Object from TaskData
     let editedTask: Task = this.taskData.find((taskFromData: Task) => {
       return task.id === taskFromData.id
     })
-    // Task Index in the array
     const taskUpdateIndex = this.taskData.findIndex((u: { id: number }) => u.id === editedTask.id)
-
-    // Removing from task Data
     this.taskData.splice(taskUpdateIndex, 1)
-
-    // Toast for the information
     this.message.success('Deleted Successful')
-
-    // if form got value
     if (this.todoForm.value) {
       this.todoForm.reset()
     }
   }
 
-  addTask() {
-    this.todoForm.reset()
-    this.addNewTask = true
-  }
-
-  onSubmitSearch() {
-    if(this.searchForm.controls['searchField'].value === null || this.searchForm.controls['searchField'].value === '' ){
-      this.taskData = this.taskService.getData()
-    } else{
-      this.resetButton = true
+  getTasks(data: Task | undefined) {
+    const taskFilters = JSON.stringify(data)
+    localStorage.setItem('initialFilters', taskFilters)
+    this.taskData = this.taskService.getData()
+    if (data?.taskName || data?.taskDescription || data?.taskAssignee || data?.taskStartDate || data?.taskEndDate) {
       this.taskData = this.taskData.filter((task: Task) => {
-        return task.taskName.toLowerCase().includes(this.searchForm.controls['searchField'].value.toLowerCase())
+        return task.taskName.toLowerCase().includes(data.taskName.toLowerCase()) &&
+        task.taskAssignee.toLowerCase().includes(data.taskAssignee.toLowerCase()) &&
+        task.taskDescription.toLowerCase().includes(data.taskDescription.toLowerCase()) &&
+        task.taskStartDate ? task.taskStartDate.includes(data.taskStartDate) : '' &&
+        task.taskEndDate ? task.taskEndDate.includes(data.taskEndDate) : ''
       })
     }
-  }
-
-  onRest(){
-    this.searchForm.reset()
-    this.resetButton = false
-    this.taskData = this.taskService.getData()
   }
 }
 

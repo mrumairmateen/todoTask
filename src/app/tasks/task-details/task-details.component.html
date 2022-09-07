@@ -1,0 +1,20 @@
+<nz-page-header class="site-page-header" nzBackIcon>
+  <nz-page-header-title>Task Details</nz-page-header-title>
+  <nz-page-header-content>
+    <div class="content">
+      <div class="main">
+        <nz-descriptions *ngIf="taskById" nzLayout="vertical">
+          <nz-descriptions-item nzTitle="Task Name">{{taskById[0].taskName}}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Task Assignee">{{taskById[0].taskAssignee}}</nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Task Start Date">{{taskById[0].taskStartDate | date: 'medium'}}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Task Description" [nzSpan]="2">
+            {{taskById[0].taskDescription}}
+          </nz-descriptions-item>
+          <nz-descriptions-item
+            nzTitle="Task End Date">{{taskById[0].taskEndDate | date: 'medium'}}</nz-descriptions-item>
+        </nz-descriptions>
+      </div>
+    </div>
+  </nz-page-header-content>
+</nz-page-header>

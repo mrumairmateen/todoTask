@@ -1,0 +1,51 @@
+<div class="row d-flex">
+  <div class="col-md-12 mt-2">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm">
+
+      <nz-form-item>
+        <nz-form-control>
+          <input formControlName="taskName" nz-input placeholder="Search by Task Name"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <input formControlName="taskAssignee" nz-input placeholder="Search by Task Assignee"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <input formControlName="taskDescription" nz-input placeholder="Search by Task Description"/>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <nz-date-picker nzPlaceHolder="Search Task by Start Date" nzFormat="yyyy-MM-dd"
+                          formControlName="taskStartDate"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <nz-date-picker nzPlaceHolder="Search Task by End Date" nzFormat="yyyy-MM-dd"
+                          formControlName="taskEndDate"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" (click)="onSubmitSearch()">Search</button>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary" (click)="onAddTask()">Add New Task</button>
+        </nz-form-control>
+      </nz-form-item>
+
+    </form>
+  </div>
+</div>

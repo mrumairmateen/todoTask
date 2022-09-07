@@ -1,0 +1,36 @@
+<nz-table #basicTable [nzData]="taskData">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Task Name</th>
+    <th>Assignee</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Task Description</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of taskData">
+    <td>{{data.id}}</td>
+    <td>{{data.taskName}}</td>
+    <td>{{data.taskAssignee}}</td>
+    <td>{{data?.taskStartDate}}</td>
+    <td>{{data?.taskEndDate}}</td>
+    <td>{{data.taskDescription}}</td>
+    <td>
+      <span nz-tooltip nzTooltipTitle="Task Details" nzTooltipColor="#1890ff" [routerLink]="['/detail', data.id]"
+            nz-icon nzType="info-circle"
+            nzTheme="outline"></span>
+      <nz-divider nzType="vertical"></nz-divider>
+      <span nz-tooltip nzTooltipTitle="Edit Task" nzTooltipColor="#1890ff" nz-icon nzType="edit"
+            nzTheme="outline" (click)="onEdit(data)"></span>
+      <nz-divider nzType="vertical"></nz-divider>
+      <span nz-tooltip nzTooltipTitle="Delete Task" nzTooltipColor="#FF0000" nz-icon nzType="delete" nzTheme="outline"
+            nz-popconfirm
+            nzPopconfirmTitle="Are you sure delete this task?"
+            nzPopconfirmPlacement="bottom" (nzOnConfirm)="onDelete(data)"></span>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Task} from "../types/task.types";
 
 @Injectable({
@@ -9,27 +9,39 @@ export class TaskService {
     id: 1,
     taskName: 'Interview Screening',
     taskDescription: 'Screening Interview for chilling',
-    taskStartDate: 'Fri Aug 26 2022 14:47:37 GMT+0500 (Pakistan Standard Time)',
-    taskEndDate: 'Fri Aug 26 2022 15:00:37 GMT+0500 (Pakistan Standard Time)',
+    taskStartDate: '2022-08-25',
+    taskEndDate: '2022-08-25',
     taskAssignee: 'Mr. Jingle',
-  },{
+  }, {
     id: 2,
     taskName: 'Submit the task',
     taskDescription: 'Technical Interview which lasted for half an hour',
-    taskStartDate: 'Fri Aug 26 2022 18:30:37 GMT+0500 (Pakistan Standard Time)',
-    taskEndDate: 'Fri Aug 26 2022 2022 19:30:37 GMT+0500 (Pakistan Standard Time)',
+    taskStartDate: '2022-08-26',
+    taskEndDate: '2022-08-26',
     taskAssignee: 'Testing Assignee',
-  },{
+  }, {
     id: 3,
     taskName: 'Submit the task',
     taskDescription: 'A Todo Application to submit for evaluation',
-    taskStartDate: 'Mon Aug 29 2022 14:47:37 GMT+0500 (Pakistan Standard Time)',
-    taskEndDate: 'Tue Aug 30 2022 14:47:37 GMT+0500 (Pakistan Standard Time)',
+    taskStartDate: '2022-08-27',
+    taskEndDate: '2022-08-27',
     taskAssignee: 'Testing Assignee',
   }]
-  constructor() { }
+
+  constructor() {
+  }
 
   getData(): Task[] {
     return this.taskData;
   }
+
+  getTaskByID(id: number) {
+    return this.taskData.filter((task: Task) => task.id === id)
+  }
+
+  convertDateToString(date: string) {
+    let today = new Date(date);
+    return today.toISOString().substring(0, 10)
+  }
+
 }
