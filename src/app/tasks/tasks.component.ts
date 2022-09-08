@@ -101,16 +101,15 @@ export class TasksComponent implements OnInit {
   getTasks(data: Task | undefined) {
     const taskFilters = JSON.stringify(data)
     localStorage.setItem('initialFilters', taskFilters)
-    if (data?.taskName || data?.taskDescription || data?.taskAssignee || data?.taskStartDate || data?.taskEndDate) {
-      this.taskData = this.taskData.filter((task: Task) => {
-        return task.taskName.toLowerCase().includes(data?.taskName.toLowerCase()) &&
-        task.taskAssignee.toLowerCase().includes(data?.taskAssignee.toLowerCase()) &&
-        task.taskDescription.toLowerCase().includes(data?.taskDescription.toLowerCase()) &&
-        task.taskStartDate ? task.taskStartDate.includes(data?.taskStartDate) : '' &&
-        task.taskEndDate ? task.taskEndDate.includes(data?.taskEndDate) : ''
-      })
-    } else {
     this.taskData = JSON.parse(localStorage.getItem('taskData') || '')
+    if (data?.taskName || data?.taskDescription || data?.taskAssignee || data?.taskStartDate || data?.taskEndDate) {
+      this.taskData = this.taskData?.filter((task: Task) => {
+        return task?.taskName?.toLowerCase().includes(data?.taskName?.toLowerCase()) &&
+        task?.taskAssignee?.toLowerCase().includes(data?.taskAssignee?.toLowerCase()) &&
+        task?.taskDescription?.toLowerCase().includes(data?.taskDescription?.toLowerCase()) &&
+        task?.taskStartDate ? task.taskStartDate.includes(data?.taskStartDate) : '' &&
+        task?.taskEndDate ? task.taskEndDate.includes(data?.taskEndDate) : ''
+      })
     }
   }
 }
